@@ -1,0 +1,37 @@
+pipeline{
+ agent any
+ stages{ 
+     stage('clone'){
+         steps{ 
+             sh '''
+                 rm -rf test_2
+                 git clone --branch master https://github.com/Ge-raldh25/test_2.git
+                 '''
+            }
+      }
+      stage('build'){
+          steps {
+              sh '''
+                
+                 cd test_2
+                 ls -1
+                 git pull
+                 cp  -r  test /tmp/test-copie
+                 echo "Build terminé: fichiers copiés dans dist/ (siulation build)"
+                 '''
+          }
+      }
+      stage('run'){
+          steps{
+              sh '''  
+              cd /tmp/test-copie
+              nohup python3 -m http.server 82  --bind 0.0.0.0 > /tmp/server.log 2>&1   &
+              echo "serveur démarré: http://0.0.0.0:82"
+              
+                
+                 '''
+          }
+      }
+      
+ } 
+}
